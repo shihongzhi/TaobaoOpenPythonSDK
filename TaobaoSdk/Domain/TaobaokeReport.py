@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 淘客API
+## @brief 淘宝客报表
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:44
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -26,10 +26,12 @@ if __getCurrentPath() not in sys.path:
 from TaobaokeReportMember import TaobaokeReportMember
 
         
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘客API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客报表</SPAN>
 class TaobaokeReport(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客报表成员列表</SPAN>
@@ -39,9 +41,6 @@ class TaobaokeReport(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
@@ -67,6 +66,35 @@ class TaobaokeReport(object):
         self.total_results = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -88,21 +116,10 @@ class TaobaokeReport(object):
             "total_results": "Number",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -112,8 +129,8 @@ class TaobaokeReport(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("taobaoke_report_members"):
+        if "taobaoke_report_members" in kargs:
             self.taobaoke_report_members = self._newInstance("taobaoke_report_members", kargs["taobaoke_report_members"])
         
-        if kargs.has_key("total_results"):
+        if "total_results" in kargs:
             self.total_results = self._newInstance("total_results", kargs["total_results"])

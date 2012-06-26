@@ -5,7 +5,7 @@
 
 ## @brief 客服未回复统计
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:20:58
+# @date 2012-06-26 21:24:19
 # @version: 0.0.0
 
 from copy import deepcopy
@@ -31,7 +31,7 @@ class NonreplyStatById(object):
         self.__kargs = deepcopy(kargs)
         
         
-        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">客服人员未回复的客户ID</SPAN>
+        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">客服人员ID</SPAN>
         # <UL>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
@@ -39,8 +39,14 @@ class NonreplyStatById(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">cntaobaohello</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
         # </UL>
-        self.non_reply_customId = None
+        self.service_staff_id = None
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">客服未回复数</SPAN>
         # <UL>
@@ -50,10 +56,16 @@ class NonreplyStatById(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">3</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
         # </UL>
         self.non_reply_num = None
         
-        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">客服人员ID</SPAN>
+        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">客服人员未回复的客户ID</SPAN>
         # <UL>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
@@ -61,8 +73,14 @@ class NonreplyStatById(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">cntaobaohello,cntaobaoabc</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
         # </UL>
-        self.service_staff_id = None
+        self.non_reply_customId = None
         
         self.__init(kargs)
 
@@ -110,28 +128,17 @@ class NonreplyStatById(object):
     def _getPropertyType(self, name):
         properties = {
             
-            "non_reply_customId": "String",
+            "service_staff_id": "String",
             
             "non_reply_num": "Number",
             
-            "service_staff_id": "String",
+            "non_reply_customId": "String",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -141,11 +148,11 @@ class NonreplyStatById(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("non_reply_customId"):
-            self.non_reply_customId = self._newInstance("non_reply_customId", kargs["non_reply_customId"])
+        if "service_staff_id" in kargs:
+            self.service_staff_id = self._newInstance("service_staff_id", kargs["service_staff_id"])
         
-        if kargs.has_key("non_reply_num"):
+        if "non_reply_num" in kargs:
             self.non_reply_num = self._newInstance("non_reply_num", kargs["non_reply_num"])
         
-        if kargs.has_key("service_staff_id"):
-            self.service_staff_id = self._newInstance("service_staff_id", kargs["service_staff_id"])
+        if "non_reply_customId" in kargs:
+            self.non_reply_customId = self._newInstance("non_reply_customId", kargs["non_reply_customId"])

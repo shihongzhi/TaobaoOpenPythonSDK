@@ -5,7 +5,7 @@
 
 ## @brief 卖家查询该笔交易订单的资金帐务相关的数据； 1. 只供卖家使用，买家不可使用 2. 可查询所有的状态的订单，但不同状态时订单的相关数据可能会有不同
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:14
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -28,6 +28,9 @@ from Domain.TradeAmount import TradeAmount
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 卖家查询该笔交易订单的资金帐务相关的数据； 1. 只供卖家使用，买家不可使用 2. 可查询所有的状态的订单，但不同状态时订单的相关数据可能会有不同</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class TradeAmountGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class TradeAmountGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.trade_amount = None
@@ -116,23 +122,8 @@ class TradeAmountGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class TradeAmountGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("trade_amount"):
+        if "trade_amount" in kargs:
             self.trade_amount = self._newInstance("trade_amount", kargs["trade_amount"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

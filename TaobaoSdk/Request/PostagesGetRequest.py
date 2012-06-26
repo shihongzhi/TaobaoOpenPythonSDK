@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 获得当前会话用户的所有邮费模板
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:49
-# @version: 0.0.16
+# @date 2012-06-26 21:24:20
+# @version: 0.0.0
 
 import os
 import sys
@@ -22,14 +21,10 @@ __modulePath = os.path.join(__getCurrentPath(), os.path.pardir)
 __modulePath = os.path.normpath(__modulePath)
 if __modulePath not in sys.path:
     sys.path.insert(0, __modulePath)
-from Response import PostagesGetResponse
 
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">获得当前会话用户的所有邮费模板</SPAN>
 # <UL>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">获取卖家的运费模板</SPAN>
-# </LI>
 # <LI>
 # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">必须用户授权</SPAN>
 # </LI>
@@ -68,9 +63,6 @@ class PostagesGetRequest(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">name,memo,created</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
         # </LI>
         # </UL>
         self.fields = None

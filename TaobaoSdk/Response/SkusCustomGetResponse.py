@@ -5,7 +5,7 @@
 
 ## @brief 跟据卖家设定的Sku的外部id获取商品，如果一个outer_id对应多个Sku会返回所有符合条件的sku  这个Sku所属卖家从传入的session中获取，需要session绑定(注：iid标签里是num_iid的值，可以用作num_iid使用)
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:14
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -28,6 +28,9 @@ from Domain.Sku import Sku
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 跟据卖家设定的Sku的外部id获取商品，如果一个outer_id对应多个Sku会返回所有符合条件的sku  这个Sku所属卖家从传入的session中获取，需要session绑定(注：iid标签里是num_iid的值，可以用作num_iid使用)</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class SkusCustomGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class SkusCustomGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.skus = None
@@ -116,23 +122,8 @@ class SkusCustomGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class SkusCustomGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("skus"):
+        if "skus" in kargs:
             self.skus = self._newInstance("skus", kargs["skus"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

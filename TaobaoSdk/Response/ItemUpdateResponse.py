@@ -3,9 +3,9 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 根据传入的num_iid更新对应的商品的数据  传入的num_iid所对应的商品必须属于当前会话的用户  商品的属性和sku的属性有包含的关系，商品的价格要位于sku的价格区间之中（例如，sku价格有5元、10元两种，那么商品的价格就需要大于等于5元，小于等于10元，否则更新商品会失败）  商品的类目和商品的价格、sku的价格都有一定的相关性（具体的关系要通过类目属性查询接口获得）  当关键属性值更新为“其他”的时候，需要输入input_pids和input_str商品才能更新成功。该接口不支持产品属性修改。
+## @brief 根据传入的num_iid更新对应的商品的数据  传入的num_iid所对应的商品必须属于当前会话的用户  商品的属性和sku的属性有包含的关系，商品的价格要位于sku的价格区间之中（例如，sku价格有5元、10元两种，那么商品的价格就需要大于等于5元，小于等于10元，否则更新商品会失败）  商品的类目和商品的价格、sku的价格都有一定的相关性（具体的关系要通过类目属性查询接口获得）  当关键属性值更新为“其他”的时候，需要输入input_pids和input_str商品才能更新成功。
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:13
+# @date 2012-06-26 21:24:20
 # @version: 0.0.0
 
 from datetime import datetime
@@ -26,8 +26,11 @@ from Domain.Item import Item
 
 
 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据传入的num_iid更新对应的商品的数据  传入的num_iid所对应的商品必须属于当前会话的用户  商品的属性和sku的属性有包含的关系，商品的价格要位于sku的价格区间之中（例如，sku价格有5元、10元两种，那么商品的价格就需要大于等于5元，小于等于10元，否则更新商品会失败）  商品的类目和商品的价格、sku的价格都有一定的相关性（具体的关系要通过类目属性查询接口获得）  当关键属性值更新为“其他”的时候，需要输入input_pids和input_str商品才能更新成功。该接口不支持产品属性修改。</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据传入的num_iid更新对应的商品的数据  传入的num_iid所对应的商品必须属于当前会话的用户  商品的属性和sku的属性有包含的关系，商品的价格要位于sku的价格区间之中（例如，sku价格有5元、10元两种，那么商品的价格就需要大于等于5元，小于等于10元，否则更新商品会失败）  商品的类目和商品的价格、sku的价格都有一定的相关性（具体的关系要通过类目属性查询接口获得）  当关键属性值更新为“其他”的时候，需要输入input_pids和input_str商品才能更新成功。</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class ItemUpdateResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class ItemUpdateResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.item = None
@@ -116,23 +122,8 @@ class ItemUpdateResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class ItemUpdateResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("item"):
+        if "item" in kargs:
             self.item = self._newInstance("item", kargs["item"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

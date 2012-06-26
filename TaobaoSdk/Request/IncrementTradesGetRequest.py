@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 自用型应用：执行taobao.increment.app.subscribe进行订阅，设置duration参数值为-1。自用型应用订阅后默认会自动进行一次授权，授权时间是永远有效。  他用型应用：首先，执行taobao.increment.app.subscribe进行订阅，设置合理的duration参数（如果为淘宝合作伙伴应用可以设置为-1）；然后执行taobao.increment.user.authorize进行用户授权。  授权后，应用即可通过taobao.increment.items.get、taobao.increment.trades.get或taobao.increment.refunds.get获取已授权用户的增量数据。  
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:54
-# @version: 0.0.16
+# @date 2012-06-26 21:24:20
+# @version: 0.0.0
 
 import os
 import sys
@@ -22,14 +21,10 @@ __modulePath = os.path.join(__getCurrentPath(), os.path.pardir)
 __modulePath = os.path.normpath(__modulePath)
 if __modulePath not in sys.path:
     sys.path.insert(0, __modulePath)
-from Response import IncrementTradesGetResponse
 
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">自用型应用：执行taobao.increment.app.subscribe进行订阅，设置duration参数值为-1。自用型应用订阅后默认会自动进行一次授权，授权时间是永远有效。  他用型应用：首先，执行taobao.increment.app.subscribe进行订阅，设置合理的duration参数（如果为淘宝合作伙伴应用可以设置为-1）；然后执行taobao.increment.user.authorize进行用户授权。  授权后，应用即可通过taobao.increment.items.get、taobao.increment.trades.get或taobao.increment.refunds.get获取已授权用户的增量数据。  </SPAN>
 # <UL>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">获取交易和评价变更通知信息</SPAN>
-# </LI>
 # <LI>
 # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">不需用户授权</SPAN>
 # </LI>
@@ -69,9 +64,6 @@ class IncrementTradesGetRequest(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">TradeCreate</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
-        # </LI>
         # </UL>
         self.status = None
         
@@ -88,9 +80,6 @@ class IncrementTradesGetRequest(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">independent_shop_trade</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
         # </LI>
         # </UL>
         self.type = None
@@ -109,9 +98,6 @@ class IncrementTradesGetRequest(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">我是一个用户名</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
-        # </LI>
         # </UL>
         self.nick = None
         
@@ -129,9 +115,6 @@ class IncrementTradesGetRequest(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">2000-01-01 00:00:00</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
-        # </LI>
         # </UL>
         self.start_modified = None
         
@@ -148,9 +131,6 @@ class IncrementTradesGetRequest(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">2000-01-01 00:00:00</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Default</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">None</SPAN>
         # </LI>
         # </UL>
         self.end_modified = None

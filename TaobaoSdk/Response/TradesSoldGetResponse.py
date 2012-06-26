@@ -5,7 +5,7 @@
 
 ## @brief 搜索当前会话用户作为卖家已卖出的交易数据(只能获取到三个月以内的交易信息)
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:14
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -21,13 +21,16 @@ if __parentPath not in sys.path:
     sys.path.insert(0, __parentPath)
 
 
-            
+        
 from Domain.Trade import Trade
 
 
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 搜索当前会话用户作为卖家已卖出的交易数据(只能获取到三个月以内的交易信息)</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class TradesSoldGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -59,18 +62,6 @@ class TradesSoldGetResponse(object):
 
         
         
-        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">是否存在下一页</SPAN>
-        # <UL>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Boolean</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
-        # </LI>
-        # </UL>
-        self.has_next = None
-        
-        
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">搜索到的交易信息总数</SPAN>
         # <UL>
         # <LI>
@@ -78,6 +69,12 @@ class TradesSoldGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">100</SPAN>
         # </LI>
         # </UL>
         self.total_results = None
@@ -90,6 +87,9 @@ class TradesSoldGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.trades = None
@@ -132,15 +132,11 @@ class TradesSoldGetResponse(object):
     def _getPropertyType(self, name):
         properties = {
             
-            "has_next": "Boolean",
-            
             "total_results": "Number",
             
             "trades": "Trade",
         }
         levels = {
-            
-            "has_next": "Basic",
             
             "total_results": "Basic",
             
@@ -148,23 +144,8 @@ class TradesSoldGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -175,19 +156,16 @@ class TradesSoldGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("has_next"):
-            self.has_next = self._newInstance("has_next", kargs["has_next"])
-        
-        if kargs.has_key("total_results"):
+        if "total_results" in kargs:
             self.total_results = self._newInstance("total_results", kargs["total_results"])
         
-        if kargs.has_key("trades"):
+        if "trades" in kargs:
             self.trades = self._newInstance("trades", kargs["trades"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

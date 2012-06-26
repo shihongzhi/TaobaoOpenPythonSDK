@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 增量API
+## @brief 商品通知消息
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:43
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                                                                                         
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">商品通知消息</SPAN>
 class NotifyItem(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">商品SKU编号</SPAN>
@@ -217,6 +219,35 @@ class NotifyItem(object):
         self.modified = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -256,21 +287,10 @@ class NotifyItem(object):
             "modified": "Date",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -280,35 +300,35 @@ class NotifyItem(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("sku_id"):
+        if "sku_id" in kargs:
             self.sku_id = self._newInstance("sku_id", kargs["sku_id"])
         
-        if kargs.has_key("sku_num"):
+        if "sku_num" in kargs:
             self.sku_num = self._newInstance("sku_num", kargs["sku_num"])
         
-        if kargs.has_key("iid"):
+        if "iid" in kargs:
             self.iid = self._newInstance("iid", kargs["iid"])
         
-        if kargs.has_key("num_iid"):
+        if "num_iid" in kargs:
             self.num_iid = self._newInstance("num_iid", kargs["num_iid"])
         
-        if kargs.has_key("title"):
+        if "title" in kargs:
             self.title = self._newInstance("title", kargs["title"])
         
-        if kargs.has_key("nick"):
+        if "nick" in kargs:
             self.nick = self._newInstance("nick", kargs["nick"])
         
-        if kargs.has_key("num"):
+        if "num" in kargs:
             self.num = self._newInstance("num", kargs["num"])
         
-        if kargs.has_key("status"):
+        if "status" in kargs:
             self.status = self._newInstance("status", kargs["status"])
         
-        if kargs.has_key("changed_fields"):
+        if "changed_fields" in kargs:
             self.changed_fields = self._newInstance("changed_fields", kargs["changed_fields"])
         
-        if kargs.has_key("price"):
+        if "price" in kargs:
             self.price = self._newInstance("price", kargs["price"])
         
-        if kargs.has_key("modified"):
+        if "modified" in kargs:
             self.modified = self._newInstance("modified", kargs["modified"])

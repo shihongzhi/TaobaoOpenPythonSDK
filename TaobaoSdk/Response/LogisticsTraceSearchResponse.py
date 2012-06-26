@@ -5,7 +5,7 @@
 
 ## @brief 用户根据淘宝交易号查询物流流转信息，如2010-8-10 15：23：00到达杭州集散地
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:16
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -28,6 +28,9 @@ from Domain.TransitStepInfo import TransitStepInfo
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 用户根据淘宝交易号查询物流流转信息，如2010-8-10 15：23：00到达杭州集散地</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
+# </LI>
 # </UL>
 class LogisticsTraceSearchResponse(object):
     def __init__(self, kargs=dict()):
@@ -59,18 +62,6 @@ class LogisticsTraceSearchResponse(object):
 
         
         
-        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">物流公司名称</SPAN>
-        # <UL>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
-        # </LI>
-        # </UL>
-        self.company_name = None
-        
-        
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">运单号</SPAN>
         # <UL>
         # <LI>
@@ -79,11 +70,17 @@ class LogisticsTraceSearchResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">1324657987</SPAN>
+        # </LI>
         # </UL>
         self.out_sid = None
         
         
-        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">订单的物流状态* 等候发送给物流公司*已提交给物流公司,等待物流公司接单*已经确认消息接收，等待物流公司接单*物流公司已接单*物流公司不接单*物流公司揽收失败*物流公司揽收成功*签收失败*对方已签收*对方拒绝签收</SPAN>
+        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">物流公司名称</SPAN>
         # <UL>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
@@ -91,8 +88,14 @@ class LogisticsTraceSearchResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">中通速递</SPAN>
+        # </LI>
         # </UL>
-        self.status = None
+        self.company_name = None
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">交易号</SPAN>
@@ -103,8 +106,32 @@ class LogisticsTraceSearchResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">1324657987</SPAN>
+        # </LI>
         # </UL>
         self.tid = None
+        
+        
+        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">订单的物流状态* 等候发送给物流公司*已提交给物流公司,等待物流公司接单*已经确认消息接收，等待物流公司接单*物流公司已接单*物流公司不接单*物流公司揽收失败*物流公司揽收成功*签收失败*对方已签收*对方拒绝签收</SPAN>
+        # <UL>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">对方已签收</SPAN>
+        # </LI>
+        # </UL>
+        self.status = None
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">流转信息列表</SPAN>
@@ -114,6 +141,9 @@ class LogisticsTraceSearchResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.trace_list = None
@@ -156,47 +186,32 @@ class LogisticsTraceSearchResponse(object):
     def _getPropertyType(self, name):
         properties = {
             
-            "company_name": "String",
-            
             "out_sid": "String",
             
-            "status": "String",
+            "company_name": "String",
             
             "tid": "Number",
+            
+            "status": "String",
             
             "trace_list": "TransitStepInfo",
         }
         levels = {
             
-            "company_name": "Basic",
-            
             "out_sid": "Basic",
             
-            "status": "Basic",
+            "company_name": "Basic",
             
             "tid": "Basic",
+            
+            "status": "Basic",
             
             "trace_list": "Object Array",
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -207,25 +222,25 @@ class LogisticsTraceSearchResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("company_name"):
-            self.company_name = self._newInstance("company_name", kargs["company_name"])
-        
-        if kargs.has_key("out_sid"):
+        if "out_sid" in kargs:
             self.out_sid = self._newInstance("out_sid", kargs["out_sid"])
         
-        if kargs.has_key("status"):
-            self.status = self._newInstance("status", kargs["status"])
+        if "company_name" in kargs:
+            self.company_name = self._newInstance("company_name", kargs["company_name"])
         
-        if kargs.has_key("tid"):
+        if "tid" in kargs:
             self.tid = self._newInstance("tid", kargs["tid"])
         
-        if kargs.has_key("trace_list"):
+        if "status" in kargs:
+            self.status = self._newInstance("status", kargs["status"])
+        
+        if "trace_list" in kargs:
             self.trace_list = self._newInstance("trace_list", kargs["trace_list"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

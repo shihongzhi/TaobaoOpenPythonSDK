@@ -3,9 +3,9 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 使用指南：http://open.taobao.com/doc/detail.htm?id=30 1.此接口用于获取异步任务处理的结果，传入的task_id必需属于当前的appKey才可以 2.此接口只返回执行完成的任务结果，未执行完的返回结果里面不包含任务结果，只有任务id，执行状态 3.执行完成的每个task的子任务结果内容与单个任务的结果结构一致。如：taobao.topats.trades.fullinfo.get返回的子任务结果就会是Trade的结构体。
+## @brief 使用指南：http://open.taobao.com/dev/index.php/ATS%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97 1.此接口用于获取异步任务处理的结果，传入的task_id必需属于当前的appKey才可以 2.此接口只返回执行完成的任务结果，未执行完的返回结果里面不包含任务结果，只有任务id，执行状态 3.执行完成的每个task的子任务结果内容与单个任务的结果结构一致。如：taobao.topats.trades.fullinfo.get返回的子任务结果就会是Trade的结构体。
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:18
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -26,8 +26,11 @@ from Domain.Task import Task
 
 
 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 使用指南：http://open.taobao.com/doc/detail.htm?id=30 1.此接口用于获取异步任务处理的结果，传入的task_id必需属于当前的appKey才可以 2.此接口只返回执行完成的任务结果，未执行完的返回结果里面不包含任务结果，只有任务id，执行状态 3.执行完成的每个task的子任务结果内容与单个任务的结果结构一致。如：taobao.topats.trades.fullinfo.get返回的子任务结果就会是Trade的结构体。</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 使用指南：http://open.taobao.com/dev/index.php/ATS%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97 1.此接口用于获取异步任务处理的结果，传入的task_id必需属于当前的appKey才可以 2.此接口只返回执行完成的任务结果，未执行完的返回结果里面不包含任务结果，只有任务id，执行状态 3.执行完成的每个task的子任务结果内容与单个任务的结果结构一致。如：taobao.topats.trades.fullinfo.get返回的子任务结果就会是Trade的结构体。</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
+# </LI>
 # </UL>
 class TopatsResultGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class TopatsResultGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.task = None
@@ -116,23 +122,8 @@ class TopatsResultGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class TopatsResultGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("task"):
+        if "task" in kargs:
             self.task = self._newInstance("task", kargs["task"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

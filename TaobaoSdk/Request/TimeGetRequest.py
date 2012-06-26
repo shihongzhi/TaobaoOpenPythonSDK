@@ -5,7 +5,7 @@
 
 ## @brief 获取淘宝系统当前时间
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:04
+# @date 2012-06-26 21:24:20
 # @version: 0.0.0
 
 import os
@@ -25,6 +25,9 @@ if __modulePath not in sys.path:
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">获取淘宝系统当前时间</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">不需用户授权</SPAN>
+# </LI>
 # </UL>
 class TimeGetRequest(object):
     def __init__(self):

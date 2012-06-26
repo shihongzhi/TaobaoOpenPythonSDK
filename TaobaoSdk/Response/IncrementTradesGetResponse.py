@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 自用型应用：执行taobao.increment.app.subscribe进行订阅，设置duration参数值为-1。自用型应用订阅后默认会自动进行一次授权，授权时间是永远有效。  他用型应用：首先，执行taobao.increment.app.subscribe进行订阅，设置合理的duration参数（如果为淘宝合作伙伴应用可以设置为-1）；然后执行taobao.increment.user.authorize进行用户授权。  授权后，应用即可通过taobao.increment.items.get、taobao.increment.trades.get或taobao.increment.refunds.get获取已授权用户的增量数据。  
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:56:04
-# @version: 0.0.16
+# @date 2012-06-26 21:24:21
+# @version: 0.0.0
 
 from datetime import datetime
 import os
@@ -30,17 +29,13 @@ from Domain.NotifyTrade import NotifyTrade
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 自用型应用：执行taobao.increment.app.subscribe进行订阅，设置duration参数值为-1。自用型应用订阅后默认会自动进行一次授权，授权时间是永远有效。  他用型应用：首先，执行taobao.increment.app.subscribe进行订阅，设置合理的duration参数（如果为淘宝合作伙伴应用可以设置为-1）；然后执行taobao.increment.user.authorize进行用户授权。  授权后，应用即可通过taobao.increment.items.get、taobao.increment.trades.get或taobao.increment.refunds.get获取已授权用户的增量数据。  </SPAN>
 # <UL>
 # <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">获取交易和评价变更通知信息</SPAN>
-# </LI>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">不需用户授权</SPAN>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
 # </LI>
 # </UL>
 class IncrementTradesGetResponse(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
-        
-        
+
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">请求的返回信息,包含状态等</SPAN>
         # <UL>
         # <LI>
@@ -57,6 +52,14 @@ class IncrementTradesGetResponse(object):
         # </UL>        
         self.responseBody = None
 
+        self.code = None
+
+        self.msg = None
+
+        self.sub_code = None
+
+        self.sub_msg = None
+
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">获取的交易通知消息体 ，具体字段见NotifyTrade数据结构</SPAN>
@@ -70,15 +73,8 @@ class IncrementTradesGetResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
         # </UL>
         self.notify_trades = None
-        ''' 
-        @ivar notify_trades: 获取的交易通知消息体 ，具体字段见NotifyTrade数据结构; B{Level}: C{Object Array}; B{Required}: C{true}; B{Sample}: C{};
-        @type notify_trades: NotifyTrade
-        '''
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">搜索到符合条件的结果总数</SPAN>
@@ -97,12 +93,11 @@ class IncrementTradesGetResponse(object):
         # </LI>
         # </UL>
         self.total_results = None
-        ''' 
-        @ivar total_results: 搜索到符合条件的结果总数; B{Level}: C{Basic}; B{Required}: C{true}; B{Sample}: C{123};
-        @type total_results: Number
-        '''
     
         self.__init(kargs)
+
+    def isSuccess(self):
+        return self.code == None and self.sub_code == None
     
     def _newInstance(self, name, value):
         types = self._getPropertyType(name)
@@ -123,6 +118,10 @@ class IncrementTradesGetResponse(object):
             if isArray:
                 return [x.encode("utf-8") for x in value[value.keys()[0]]]
             else:
+                #like taobao.simba.rpt.adgroupbase.get, response.rpt_adgroup_base_list is a json string,but will be decode into a list via python json lib 
+                if not isinstance(value,str):
+                    #the value should be a json string 
+                    return value
                 return value.encode("utf-8")
         else:
             if isArray:
@@ -145,23 +144,8 @@ class IncrementTradesGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -172,9 +156,16 @@ class IncrementTradesGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("notify_trades"):
+        if "notify_trades" in kargs:
             self.notify_trades = self._newInstance("notify_trades", kargs["notify_trades"])
         
-        if kargs.has_key("total_results"):
+        if "total_results" in kargs:
             self.total_results = self._newInstance("total_results", kargs["total_results"])
-        pass
+        if "code" in kargs:
+            self.code = kargs["code"]
+        if "msg" in kargs:
+            self.msg = kargs["msg"]
+        if "sub_code" in kargs:
+            self.sub_code = kargs["sub_code"]
+        if "sub_msg" in kargs:
+            self.sub_msg = kargs["sub_msg"]

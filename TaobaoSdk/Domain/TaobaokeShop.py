@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 淘客API
+## @brief 淘宝客店铺
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:44
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                                                                 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘客API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客店铺</SPAN>
 class TaobaokeShop(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">店铺用户id</SPAN>
@@ -166,6 +168,35 @@ class TaobaokeShop(object):
         self.auction_count = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -199,21 +230,10 @@ class TaobaokeShop(object):
             "auction_count": "Number",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -223,26 +243,26 @@ class TaobaokeShop(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("user_id"):
+        if "user_id" in kargs:
             self.user_id = self._newInstance("user_id", kargs["user_id"])
         
-        if kargs.has_key("shop_title"):
+        if "shop_title" in kargs:
             self.shop_title = self._newInstance("shop_title", kargs["shop_title"])
         
-        if kargs.has_key("click_url"):
+        if "click_url" in kargs:
             self.click_url = self._newInstance("click_url", kargs["click_url"])
         
-        if kargs.has_key("commission_rate"):
+        if "commission_rate" in kargs:
             self.commission_rate = self._newInstance("commission_rate", kargs["commission_rate"])
         
-        if kargs.has_key("seller_credit"):
+        if "seller_credit" in kargs:
             self.seller_credit = self._newInstance("seller_credit", kargs["seller_credit"])
         
-        if kargs.has_key("shop_type"):
+        if "shop_type" in kargs:
             self.shop_type = self._newInstance("shop_type", kargs["shop_type"])
         
-        if kargs.has_key("total_auction"):
+        if "total_auction" in kargs:
             self.total_auction = self._newInstance("total_auction", kargs["total_auction"])
         
-        if kargs.has_key("auction_count"):
+        if "auction_count" in kargs:
             self.auction_count = self._newInstance("auction_count", kargs["auction_count"])

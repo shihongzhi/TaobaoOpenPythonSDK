@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 增量API
+## @brief ISV订阅信息
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:43
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -29,10 +29,12 @@ from Subscription import Subscription
 from NotifyInfo import NotifyInfo
 
                         
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">ISV订阅信息</SPAN>
 class SubscribeMessage(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">ISV的应用AppKey</SPAN>
@@ -112,9 +114,6 @@ class SubscribeMessage(object):
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
         # </LI>
         # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
-        # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
@@ -144,9 +143,6 @@ class SubscribeMessage(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">false</SPAN>
@@ -206,6 +202,35 @@ class SubscribeMessage(object):
         self.attributes = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -243,21 +268,10 @@ class SubscribeMessage(object):
             "attributes": "String",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -267,32 +281,32 @@ class SubscribeMessage(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("app_key"):
+        if "app_key" in kargs:
             self.app_key = self._newInstance("app_key", kargs["app_key"])
         
-        if kargs.has_key("start_date"):
+        if "start_date" in kargs:
             self.start_date = self._newInstance("start_date", kargs["start_date"])
         
-        if kargs.has_key("end_date"):
+        if "end_date" in kargs:
             self.end_date = self._newInstance("end_date", kargs["end_date"])
         
-        if kargs.has_key("modified"):
+        if "modified" in kargs:
             self.modified = self._newInstance("modified", kargs["modified"])
         
-        if kargs.has_key("subscriptions"):
+        if "subscriptions" in kargs:
             self.subscriptions = self._newInstance("subscriptions", kargs["subscriptions"])
         
-        if kargs.has_key("valid"):
+        if "valid" in kargs:
             self.valid = self._newInstance("valid", kargs["valid"])
         
-        if kargs.has_key("notify_infos"):
+        if "notify_infos" in kargs:
             self.notify_infos = self._newInstance("notify_infos", kargs["notify_infos"])
         
-        if kargs.has_key("notify_url"):
+        if "notify_url" in kargs:
             self.notify_url = self._newInstance("notify_url", kargs["notify_url"])
         
-        if kargs.has_key("user_role"):
+        if "user_role" in kargs:
             self.user_role = self._newInstance("user_role", kargs["user_role"])
         
-        if kargs.has_key("attributes"):
+        if "attributes" in kargs:
             self.attributes = self._newInstance("attributes", kargs["attributes"])

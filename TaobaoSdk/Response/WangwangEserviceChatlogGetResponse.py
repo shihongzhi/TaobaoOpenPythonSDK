@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:56:03
-# @version: 0.0.16
+# @date 2012-06-26 21:24:21
+# @version: 0.0.0
 
 from datetime import datetime
 import os
@@ -30,17 +29,13 @@ from Domain.Msg import Msg
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: </SPAN>
 # <UL>
 # <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">获取具体的聊天记录</SPAN>
-# </LI>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">可选用户授权</SPAN>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "可选用户授权"></SPAN>
 # </LI>
 # </UL>
 class WangwangEserviceChatlogGetResponse(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
-        
-        
+
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">请求的返回信息,包含状态等</SPAN>
         # <UL>
         # <LI>
@@ -56,6 +51,14 @@ class WangwangEserviceChatlogGetResponse(object):
         # </LI>
         # </UL>        
         self.responseBody = None
+
+        self.code = None
+
+        self.msg = None
+
+        self.sub_code = None
+
+        self.sub_msg = None
 
         
         
@@ -75,17 +78,6 @@ class WangwangEserviceChatlogGetResponse(object):
         # </LI>
         # </UL>
         self.ret = None
-        ''' 
-        @ivar ret: 返回码。  
-10000:成功；  
- 
-50000：时间非法，包括1)时间段超过7天,或2)起始时间距今超过30天，或3)时间格式不对；  
- 
-40000：聊天用户ID不是该店铺的帐号或子帐号查询主帐号私密联系人的聊天记录；  
- 
-30000：系统错误，包括必填参数为空。; B{Level}: C{Basic}; B{Required}: C{true}; B{Sample}: C{10000};
-        @type ret: Number
-        '''
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">聊天记录数目。</SPAN>
@@ -104,10 +96,6 @@ class WangwangEserviceChatlogGetResponse(object):
         # </LI>
         # </UL>
         self.count = None
-        ''' 
-        @ivar count: 聊天记录数目。; B{Level}: C{Basic}; B{Required}: C{true}; B{Sample}: C{123};
-        @type count: Number
-        '''
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">聊天消息列表，即Msg[]，direction=0为from_id发送消息给to_id，direction=1为to_id发送消息给from_id</SPAN>
@@ -121,17 +109,13 @@ class WangwangEserviceChatlogGetResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
         # </UL>
         self.msgs = None
-        ''' 
-        @ivar msgs: 聊天消息列表，即Msg[]，direction=0为from_id发送消息给to_id，direction=1为to_id发送消息给from_id; B{Level}: C{Object Array}; B{Required}: C{true}; B{Sample}: C{};
-        @type msgs: Msg
-        '''
     
         self.__init(kargs)
+
+    def isSuccess(self):
+        return self.code == None and self.sub_code == None
     
     def _newInstance(self, name, value):
         types = self._getPropertyType(name)
@@ -152,6 +136,10 @@ class WangwangEserviceChatlogGetResponse(object):
             if isArray:
                 return [x.encode("utf-8") for x in value[value.keys()[0]]]
             else:
+                #like taobao.simba.rpt.adgroupbase.get, response.rpt_adgroup_base_list is a json string,but will be decode into a list via python json lib 
+                if not isinstance(value,str):
+                    #the value should be a json string 
+                    return value
                 return value.encode("utf-8")
         else:
             if isArray:
@@ -178,23 +166,8 @@ class WangwangEserviceChatlogGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -205,12 +178,19 @@ class WangwangEserviceChatlogGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("ret"):
+        if "ret" in kargs:
             self.ret = self._newInstance("ret", kargs["ret"])
         
-        if kargs.has_key("count"):
+        if "count" in kargs:
             self.count = self._newInstance("count", kargs["count"])
         
-        if kargs.has_key("msgs"):
+        if "msgs" in kargs:
             self.msgs = self._newInstance("msgs", kargs["msgs"])
-        pass
+        if "code" in kargs:
+            self.code = kargs["code"]
+        if "msg" in kargs:
+            self.msg = kargs["msg"]
+        if "sub_code" in kargs:
+            self.sub_code = kargs["sub_code"]
+        if "sub_msg" in kargs:
+            self.sub_msg = kargs["sub_msg"]

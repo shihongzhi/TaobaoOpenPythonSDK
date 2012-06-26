@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 增量API
+## @brief 订阅类型
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:43
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">订阅类型</SPAN>
 class Subscription(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量消息所属的主题。 可选值  trade（交易类型）  item（商品类型）  refund（退款类型）</SPAN>
@@ -64,6 +66,35 @@ class Subscription(object):
         self.status = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -85,21 +116,10 @@ class Subscription(object):
             "status": "String",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -109,8 +129,8 @@ class Subscription(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("topic"):
+        if "topic" in kargs:
             self.topic = self._newInstance("topic", kargs["topic"])
         
-        if kargs.has_key("status"):
+        if "status" in kargs:
             self.status = self._newInstance("status", kargs["status"])

@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 获取小二推荐的商品
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:56:06
-# @version: 0.0.16
+# @date 2012-06-26 21:24:21
+# @version: 0.0.0
 
 from datetime import datetime
 import os
@@ -30,17 +29,13 @@ from Domain.TaohuaItem import TaohuaItem
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 获取小二推荐的商品</SPAN>
 # <UL>
 # <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">获取小二推荐的商品</SPAN>
-# </LI>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">不需用户授权</SPAN>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
 # </LI>
 # </UL>
 class TaohuaStaffrecitemsGetResponse(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
-        
-        
+
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">请求的返回信息,包含状态等</SPAN>
         # <UL>
         # <LI>
@@ -57,6 +52,14 @@ class TaohuaStaffrecitemsGetResponse(object):
         # </UL>        
         self.responseBody = None
 
+        self.code = None
+
+        self.msg = None
+
+        self.sub_code = None
+
+        self.sub_msg = None
+
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘花商品数据结构列表</SPAN>
@@ -70,15 +73,8 @@ class TaohuaStaffrecitemsGetResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
         # </UL>
         self.taohua_items = None
-        ''' 
-        @ivar taohua_items: 淘花商品数据结构列表; B{Level}: C{Object Array}; B{Required}: C{true}; B{Sample}: C{};
-        @type taohua_items: TaohuaItem
-        '''
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">总商品数量</SPAN>
@@ -97,12 +93,11 @@ class TaohuaStaffrecitemsGetResponse(object):
         # </LI>
         # </UL>
         self.total_items = None
-        ''' 
-        @ivar total_items: 总商品数量; B{Level}: C{Basic}; B{Required}: C{true}; B{Sample}: C{20};
-        @type total_items: Number
-        '''
     
         self.__init(kargs)
+
+    def isSuccess(self):
+        return self.code == None and self.sub_code == None
     
     def _newInstance(self, name, value):
         types = self._getPropertyType(name)
@@ -123,6 +118,10 @@ class TaohuaStaffrecitemsGetResponse(object):
             if isArray:
                 return [x.encode("utf-8") for x in value[value.keys()[0]]]
             else:
+                #like taobao.simba.rpt.adgroupbase.get, response.rpt_adgroup_base_list is a json string,but will be decode into a list via python json lib 
+                if not isinstance(value,str):
+                    #the value should be a json string 
+                    return value
                 return value.encode("utf-8")
         else:
             if isArray:
@@ -145,23 +144,8 @@ class TaohuaStaffrecitemsGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -172,9 +156,16 @@ class TaohuaStaffrecitemsGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("taohua_items"):
+        if "taohua_items" in kargs:
             self.taohua_items = self._newInstance("taohua_items", kargs["taohua_items"])
         
-        if kargs.has_key("total_items"):
+        if "total_items" in kargs:
             self.total_items = self._newInstance("total_items", kargs["total_items"])
-        pass
+        if "code" in kargs:
+            self.code = kargs["code"]
+        if "msg" in kargs:
+            self.msg = kargs["msg"]
+        if "sub_code" in kargs:
+            self.sub_code = kargs["sub_code"]
+        if "sub_msg" in kargs:
+            self.sub_msg = kargs["sub_msg"]

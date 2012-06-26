@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 淘客API
+## @brief 淘宝客商品
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:44
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                                                                                                                                         
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘客API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客商品</SPAN>
 class TaobaokeItem(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客佣金比率，比如：1234代表12.34%</SPAN>
@@ -319,6 +321,35 @@ class TaobaokeItem(object):
         self.keyword_click_url = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -370,21 +401,10 @@ class TaobaokeItem(object):
             "keyword_click_url": "String",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -394,53 +414,53 @@ class TaobaokeItem(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("commission_rate"):
+        if "commission_rate" in kargs:
             self.commission_rate = self._newInstance("commission_rate", kargs["commission_rate"])
         
-        if kargs.has_key("iid"):
+        if "iid" in kargs:
             self.iid = self._newInstance("iid", kargs["iid"])
         
-        if kargs.has_key("num_iid"):
+        if "num_iid" in kargs:
             self.num_iid = self._newInstance("num_iid", kargs["num_iid"])
         
-        if kargs.has_key("title"):
+        if "title" in kargs:
             self.title = self._newInstance("title", kargs["title"])
         
-        if kargs.has_key("nick"):
+        if "nick" in kargs:
             self.nick = self._newInstance("nick", kargs["nick"])
         
-        if kargs.has_key("pic_url"):
+        if "pic_url" in kargs:
             self.pic_url = self._newInstance("pic_url", kargs["pic_url"])
         
-        if kargs.has_key("price"):
+        if "price" in kargs:
             self.price = self._newInstance("price", kargs["price"])
         
-        if kargs.has_key("click_url"):
+        if "click_url" in kargs:
             self.click_url = self._newInstance("click_url", kargs["click_url"])
         
-        if kargs.has_key("commission"):
+        if "commission" in kargs:
             self.commission = self._newInstance("commission", kargs["commission"])
         
-        if kargs.has_key("commission_num"):
+        if "commission_num" in kargs:
             self.commission_num = self._newInstance("commission_num", kargs["commission_num"])
         
-        if kargs.has_key("commission_volume"):
+        if "commission_volume" in kargs:
             self.commission_volume = self._newInstance("commission_volume", kargs["commission_volume"])
         
-        if kargs.has_key("shop_click_url"):
+        if "shop_click_url" in kargs:
             self.shop_click_url = self._newInstance("shop_click_url", kargs["shop_click_url"])
         
-        if kargs.has_key("seller_credit_score"):
+        if "seller_credit_score" in kargs:
             self.seller_credit_score = self._newInstance("seller_credit_score", kargs["seller_credit_score"])
         
-        if kargs.has_key("item_location"):
+        if "item_location" in kargs:
             self.item_location = self._newInstance("item_location", kargs["item_location"])
         
-        if kargs.has_key("volume"):
+        if "volume" in kargs:
             self.volume = self._newInstance("volume", kargs["volume"])
         
-        if kargs.has_key("taobaoke_cat_click_url"):
+        if "taobaoke_cat_click_url" in kargs:
             self.taobaoke_cat_click_url = self._newInstance("taobaoke_cat_click_url", kargs["taobaoke_cat_click_url"])
         
-        if kargs.has_key("keyword_click_url"):
+        if "keyword_click_url" in kargs:
             self.keyword_click_url = self._newInstance("keyword_click_url", kargs["keyword_click_url"])

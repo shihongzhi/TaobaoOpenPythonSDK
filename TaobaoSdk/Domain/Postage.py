@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 商品API
+## @brief 运费模板结构
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:43
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -26,10 +26,12 @@ if __getCurrentPath() not in sys.path:
 from PostageMode import PostageMode
 
 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">商品API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">运费模板结构</SPAN>
 class Postage(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">运费模板ID</SPAN>
@@ -228,15 +230,41 @@ class Postage(object):
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
         # </LI>
         # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
-        # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.postage_modes = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -278,21 +306,10 @@ class Postage(object):
             "postage_modes": "PostageMode",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -302,38 +319,38 @@ class Postage(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("postage_id"):
+        if "postage_id" in kargs:
             self.postage_id = self._newInstance("postage_id", kargs["postage_id"])
         
-        if kargs.has_key("name"):
+        if "name" in kargs:
             self.name = self._newInstance("name", kargs["name"])
         
-        if kargs.has_key("memo"):
+        if "memo" in kargs:
             self.memo = self._newInstance("memo", kargs["memo"])
         
-        if kargs.has_key("created"):
+        if "created" in kargs:
             self.created = self._newInstance("created", kargs["created"])
         
-        if kargs.has_key("modified"):
+        if "modified" in kargs:
             self.modified = self._newInstance("modified", kargs["modified"])
         
-        if kargs.has_key("post_price"):
+        if "post_price" in kargs:
             self.post_price = self._newInstance("post_price", kargs["post_price"])
         
-        if kargs.has_key("post_increase"):
+        if "post_increase" in kargs:
             self.post_increase = self._newInstance("post_increase", kargs["post_increase"])
         
-        if kargs.has_key("express_price"):
+        if "express_price" in kargs:
             self.express_price = self._newInstance("express_price", kargs["express_price"])
         
-        if kargs.has_key("express_increase"):
+        if "express_increase" in kargs:
             self.express_increase = self._newInstance("express_increase", kargs["express_increase"])
         
-        if kargs.has_key("ems_price"):
+        if "ems_price" in kargs:
             self.ems_price = self._newInstance("ems_price", kargs["ems_price"])
         
-        if kargs.has_key("ems_increase"):
+        if "ems_increase" in kargs:
             self.ems_increase = self._newInstance("ems_increase", kargs["ems_increase"])
         
-        if kargs.has_key("postage_modes"):
+        if "postage_modes" in kargs:
             self.postage_modes = self._newInstance("postage_modes", kargs["postage_modes"])

@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 淘客API
+## @brief 淘宝客报表成员
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:55:44
-# @version: 0.0.16
+# @date 2012-06-26 21:24:19
+# @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                                                                                                                                 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘客API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘宝客报表成员</SPAN>
 class TaobaokeReportMember(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">佣金比率。比如：1234代表12.34%</SPAN>
@@ -302,6 +304,35 @@ class TaobaokeReportMember(object):
         self.seller_nick = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -351,21 +382,10 @@ class TaobaokeReportMember(object):
             "seller_nick": "String",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -375,50 +395,50 @@ class TaobaokeReportMember(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("commission_rate"):
+        if "commission_rate" in kargs:
             self.commission_rate = self._newInstance("commission_rate", kargs["commission_rate"])
         
-        if kargs.has_key("real_pay_fee"):
+        if "real_pay_fee" in kargs:
             self.real_pay_fee = self._newInstance("real_pay_fee", kargs["real_pay_fee"])
         
-        if kargs.has_key("app_key"):
+        if "app_key" in kargs:
             self.app_key = self._newInstance("app_key", kargs["app_key"])
         
-        if kargs.has_key("outer_code"):
+        if "outer_code" in kargs:
             self.outer_code = self._newInstance("outer_code", kargs["outer_code"])
         
-        if kargs.has_key("trade_id"):
+        if "trade_id" in kargs:
             self.trade_id = self._newInstance("trade_id", kargs["trade_id"])
         
-        if kargs.has_key("pay_time"):
+        if "pay_time" in kargs:
             self.pay_time = self._newInstance("pay_time", kargs["pay_time"])
         
-        if kargs.has_key("pay_price"):
+        if "pay_price" in kargs:
             self.pay_price = self._newInstance("pay_price", kargs["pay_price"])
         
-        if kargs.has_key("num_iid"):
+        if "num_iid" in kargs:
             self.num_iid = self._newInstance("num_iid", kargs["num_iid"])
         
-        if kargs.has_key("item_title"):
+        if "item_title" in kargs:
             self.item_title = self._newInstance("item_title", kargs["item_title"])
         
-        if kargs.has_key("item_num"):
+        if "item_num" in kargs:
             self.item_num = self._newInstance("item_num", kargs["item_num"])
         
-        if kargs.has_key("category_id"):
+        if "category_id" in kargs:
             self.category_id = self._newInstance("category_id", kargs["category_id"])
         
-        if kargs.has_key("category_name"):
+        if "category_name" in kargs:
             self.category_name = self._newInstance("category_name", kargs["category_name"])
         
-        if kargs.has_key("shop_title"):
+        if "shop_title" in kargs:
             self.shop_title = self._newInstance("shop_title", kargs["shop_title"])
         
-        if kargs.has_key("commission"):
+        if "commission" in kargs:
             self.commission = self._newInstance("commission", kargs["commission"])
         
-        if kargs.has_key("iid"):
+        if "iid" in kargs:
             self.iid = self._newInstance("iid", kargs["iid"])
         
-        if kargs.has_key("seller_nick"):
+        if "seller_nick" in kargs:
             self.seller_nick = self._newInstance("seller_nick", kargs["seller_nick"])

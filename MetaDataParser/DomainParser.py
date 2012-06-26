@@ -21,12 +21,12 @@ class DomainParser(object):
         self.output = output
         
     def generateFiles(self):
-        rootOutput = os.path.join(self.output, domainOutput)
+        rootOutput = os.path.join(self.output, OUTPUT['domain'])
         if not os.path.exists(rootOutput):
             os.makedirs(rootOutput)
         imported = set()
+        templateFile = Template(file(TEMPLATE['domain']).read().decode("utf-8"))
         for struct in self.root.getElementsByTagName("struct"):
-            templateFile = Template(file(domainTemplate).read().decode("utf-8"))
             rendered = templateFile.render_unicode(struct=struct).encode("utf-8")
             rendered = rendered.replace("\\#\\#", "##")
             filename = struct.getElementsByTagName("name")[0].firstChild.data.encode("utf-8")
@@ -34,12 +34,9 @@ class DomainParser(object):
             filename += ".py"
             filename = os.path.join(rootOutput, filename)
             print "Generating %s" % (filename)
-            fout = file(filename, "w")
-            fout.write(rendered)
-            fout.close()
-        templateFile = Template(file(initTemplate).read().decode("utf-8"))
+            with open(filename, 'w') as fout:
+                fout.write(rendered)
+        templateFile = Template(file(TEMPLATE['init']).read().decode("utf-8"))
         rendered = templateFile.render_unicode(imports=imported).encode("utf-8")
-        fout = file(os.path.join(rootOutput, "__init__.py"), "w")
-        fout.write(rendered)
-        fout.close()
-
+        with open(os.path.join(rootOutput, "__init__.py"), 'w') as fout:
+            fout.write(rendered)

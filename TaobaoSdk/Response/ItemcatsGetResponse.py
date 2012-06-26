@@ -5,7 +5,7 @@
 
 ## @brief 获取后台供卖家发布商品的标准商品类目
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:11
+# @date 2012-06-26 21:24:20
 # @version: 0.0.0
 
 from datetime import datetime
@@ -21,13 +21,16 @@ if __parentPath not in sys.path:
     sys.path.insert(0, __parentPath)
 
 
-    
+        
 from Domain.ItemCat import ItemCat
 
-    
+
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 获取后台供卖家发布商品的标准商品类目</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
+# </LI>
 # </UL>
 class ItemcatsGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -59,18 +62,6 @@ class ItemcatsGetResponse(object):
 
         
         
-        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量类目信息,根据fields传入的参数返回相应的结果</SPAN>
-        # <UL>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">ItemCat</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
-        # </LI>
-        # </UL>
-        self.item_cats = None
-        
-        
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">最近修改时间(如果取增量，会返回该字段)。格式:yyyy-MM-dd HH:mm:ss</SPAN>
         # <UL>
         # <LI>
@@ -79,8 +70,29 @@ class ItemcatsGetResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">false</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">2000-01-01 00:00:00</SPAN>
+        # </LI>
         # </UL>
         self.last_modified = None
+        
+        
+        ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">增量类目信息,根据fields传入的参数返回相应的结果</SPAN>
+        # <UL>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">ItemCat</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # </UL>
+        self.item_cats = None
     
         self.__init(kargs)
 
@@ -120,35 +132,20 @@ class ItemcatsGetResponse(object):
     def _getPropertyType(self, name):
         properties = {
             
-            "item_cats": "ItemCat",
-            
             "last_modified": "Date",
+            
+            "item_cats": "ItemCat",
         }
         levels = {
             
-            "item_cats": "Object Array",
-            
             "last_modified": "Basic",
+            
+            "item_cats": "Object Array",
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -159,16 +156,16 @@ class ItemcatsGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("item_cats"):
-            self.item_cats = self._newInstance("item_cats", kargs["item_cats"])
-        
-        if kargs.has_key("last_modified"):
+        if "last_modified" in kargs:
             self.last_modified = self._newInstance("last_modified", kargs["last_modified"])
-        if kargs.has_key("code"):
+        
+        if "item_cats" in kargs:
+            self.item_cats = self._newInstance("item_cats", kargs["item_cats"])
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

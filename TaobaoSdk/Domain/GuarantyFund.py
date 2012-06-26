@@ -3,17 +3,17 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 收费API
+## @brief 保证金
 # @author wuliang@maimiaotech.com
-# @date 2012-06-11 16:04:17
+# @date 2012-06-26 21:24:19
 # @version: 0.0.0
 
-
-
+from copy import deepcopy
 from datetime import datetime
 import os
 import sys
 import time
+import types
 
 def __getCurrentPath():
     return os.path.normpath(os.path.join(os.path.realpath(__file__), os.path.pardir))
@@ -23,10 +23,12 @@ if __getCurrentPath() not in sys.path:
 
 
                                                                                                                                                 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">收费API</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">保证金</SPAN>
 class GuarantyFund(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
+
+        self.__kargs = deepcopy(kargs)
         
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">保证金编号</SPAN>
@@ -336,6 +338,35 @@ class GuarantyFund(object):
         self.status = None
         
         self.__init(kargs)
+
+    def toDict(self, **kargs):
+        result = deepcopy(self.__kargs)
+        for key, value in self.__dict__.iteritems():
+            if key.endswith("__kargs"):
+                continue
+            if value == None:
+                if kargs.has_key("includeNone") and kargs["includeNone"]:
+                    result[key] = value
+                else:
+                    continue
+            else:
+                result[key] = value
+        result = self.__unicodeToUtf8(result)
+        return result
+
+    def __unicodeToUtf8(self, obj):
+        if isinstance(obj, types.UnicodeType):
+            return obj.encode("utf-8")
+        elif isinstance(obj, types.DictType):
+            results = dict()
+            for key, value in obj.iteritems():
+                results[self.__unicodeToUtf8(key)] = self.__unicodeToUtf8(value)
+            return results
+        elif isinstance(obj, types.ListType):
+            results = [self.__unicodeToUtf8(x) for x in obj]
+            return results
+        else:
+            return obj
         
     def _newInstance(self, name, value):
         propertyType = self._getPropertyType(name)
@@ -389,21 +420,10 @@ class GuarantyFund(object):
             "status": "Number",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -413,56 +433,56 @@ class GuarantyFund(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("id"):
+        if "id" in kargs:
             self.id = self._newInstance("id", kargs["id"])
         
-        if kargs.has_key("type"):
+        if "type" in kargs:
             self.type = self._newInstance("type", kargs["type"])
         
-        if kargs.has_key("amount"):
+        if "amount" in kargs:
             self.amount = self._newInstance("amount", kargs["amount"])
         
-        if kargs.has_key("balance"):
+        if "balance" in kargs:
             self.balance = self._newInstance("balance", kargs["balance"])
         
-        if kargs.has_key("seller_id"):
+        if "seller_id" in kargs:
             self.seller_id = self._newInstance("seller_id", kargs["seller_id"])
         
-        if kargs.has_key("seller_nick"):
+        if "seller_nick" in kargs:
             self.seller_nick = self._newInstance("seller_nick", kargs["seller_nick"])
         
-        if kargs.has_key("buyer_id"):
+        if "buyer_id" in kargs:
             self.buyer_id = self._newInstance("buyer_id", kargs["buyer_id"])
         
-        if kargs.has_key("buyer_nick"):
+        if "buyer_nick" in kargs:
             self.buyer_nick = self._newInstance("buyer_nick", kargs["buyer_nick"])
         
-        if kargs.has_key("order_id"):
+        if "order_id" in kargs:
             self.order_id = self._newInstance("order_id", kargs["order_id"])
         
-        if kargs.has_key("accuse_id"):
+        if "accuse_id" in kargs:
             self.accuse_id = self._newInstance("accuse_id", kargs["accuse_id"])
         
-        if kargs.has_key("operation_type"):
+        if "operation_type" in kargs:
             self.operation_type = self._newInstance("operation_type", kargs["operation_type"])
         
-        if kargs.has_key("operation_action"):
+        if "operation_action" in kargs:
             self.operation_action = self._newInstance("operation_action", kargs["operation_action"])
         
-        if kargs.has_key("memo"):
+        if "memo" in kargs:
             self.memo = self._newInstance("memo", kargs["memo"])
         
-        if kargs.has_key("creator"):
+        if "creator" in kargs:
             self.creator = self._newInstance("creator", kargs["creator"])
         
-        if kargs.has_key("operator"):
+        if "operator" in kargs:
             self.operator = self._newInstance("operator", kargs["operator"])
         
-        if kargs.has_key("created"):
+        if "created" in kargs:
             self.created = self._newInstance("created", kargs["created"])
         
-        if kargs.has_key("modified"):
+        if "modified" in kargs:
             self.modified = self._newInstance("modified", kargs["modified"])
         
-        if kargs.has_key("status"):
+        if "status" in kargs:
             self.status = self._newInstance("status", kargs["status"])

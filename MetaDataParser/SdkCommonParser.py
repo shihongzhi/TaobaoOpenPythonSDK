@@ -23,10 +23,7 @@ class SdkCommonParser(object):
     def generateFiles(self):
         if not os.path.exists(self.output):
             os.makedirs(self.output)
-        templateFile = Template(file(sdkCommonTemplate).read().decode("utf-8"))
+        templateFile = Template(file(TEMPLATE['sdk_common']).read().decode("utf-8"))
         rendered = templateFile.render_unicode(root=self.root).encode("utf-8")
-        fout = file(os.path.join(self.output, sdkCommonOutput), "w")
-        fout.write(rendered)
-        fout.close()
-        
-        
+        with open(os.path.join(self.output, OUTPUT['sdk_common']), 'w') as fout:
+            fout.write(rendered)

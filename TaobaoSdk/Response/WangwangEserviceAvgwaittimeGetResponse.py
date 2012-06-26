@@ -3,9 +3,9 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 根据客服ID和日期，获取该客服"当日接待的所有客户的平均等待时长"。  <br/> 备注：  <br/> 1、如果是操作者ID=被查者ID，返回被查者ID的"当日接待的所有客户的平均等待时长"。  <br/> 2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"当日接待的所有客户的平均等待时长"。service_staff_id为所有子帐号，用 "," 隔开 <br/> 3、如果操作者是主账户，他可以查询所有子帐号的"当日接待的所有客户的平均等待时长"。  service_staff_id为所有子帐号，用 "," 隔开<br/>  4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。  <br/>  5、开始时间与结束时间之间的间隔不能超过7天  <br/>  6、不能查询90天以前的数据  <br/>  7、不能查询当天的记录
+## @brief 根据客服ID和日期，获取该客服"当日接待的所有客户的平均等待时长"。  备注：1、如果是操作者ID=被查者ID，返回被查者ID的"当日接待的所有客户的平均等待时长"。      2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"当日接待的所有客户的平均等待时长"。      3、如果操作者是主账户，他可以查询所有子帐号的"当日接待的所有客户的平均等待时长"。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。     5、开始时间与结束时间之间的间隔不能超过7天     6、不能查询90天以前的数据     7、不能查询当天的记录
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:18
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -26,8 +26,11 @@ from Domain.WaitingTimesOnDay import WaitingTimesOnDay
 
 
 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据客服ID和日期，获取该客服"当日接待的所有客户的平均等待时长"。  <br/> 备注：  <br/> 1、如果是操作者ID=被查者ID，返回被查者ID的"当日接待的所有客户的平均等待时长"。  <br/> 2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"当日接待的所有客户的平均等待时长"。service_staff_id为所有子帐号，用 "," 隔开 <br/> 3、如果操作者是主账户，他可以查询所有子帐号的"当日接待的所有客户的平均等待时长"。  service_staff_id为所有子帐号，用 "," 隔开<br/>  4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。  <br/>  5、开始时间与结束时间之间的间隔不能超过7天  <br/>  6、不能查询90天以前的数据  <br/>  7、不能查询当天的记录</SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据客服ID和日期，获取该客服"当日接待的所有客户的平均等待时长"。  备注：1、如果是操作者ID=被查者ID，返回被查者ID的"当日接待的所有客户的平均等待时长"。      2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"当日接待的所有客户的平均等待时长"。      3、如果操作者是主账户，他可以查询所有子帐号的"当日接待的所有客户的平均等待时长"。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。     5、开始时间与结束时间之间的间隔不能超过7天     6、不能查询90天以前的数据     7、不能查询当天的记录</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class WangwangEserviceAvgwaittimeGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class WangwangEserviceAvgwaittimeGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">false</SPAN>
         # </LI>
         # </UL>
         self.waiting_time_list_on_days = None
@@ -116,23 +122,8 @@ class WangwangEserviceAvgwaittimeGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class WangwangEserviceAvgwaittimeGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("waiting_time_list_on_days"):
+        if "waiting_time_list_on_days" in kargs:
             self.waiting_time_list_on_days = self._newInstance("waiting_time_list_on_days", kargs["waiting_time_list_on_days"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]

@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 此接口用于ISV查询订阅信息。
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:56:04
-# @version: 0.0.16
+# @date 2012-06-26 21:24:21
+# @version: 0.0.0
 
 from datetime import datetime
 import os
@@ -30,17 +29,13 @@ from Domain.SubscribeMessage import SubscribeMessage
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 此接口用于ISV查询订阅信息。</SPAN>
 # <UL>
 # <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">ISV订阅信息查询</SPAN>
-# </LI>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">不需用户授权</SPAN>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "不需用户授权"></SPAN>
 # </LI>
 # </UL>
 class IncrementSubscribemessageGetResponse(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
-        
-        
+
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">请求的返回信息,包含状态等</SPAN>
         # <UL>
         # <LI>
@@ -57,6 +52,14 @@ class IncrementSubscribemessageGetResponse(object):
         # </UL>        
         self.responseBody = None
 
+        self.code = None
+
+        self.msg = None
+
+        self.sub_code = None
+
+        self.sub_msg = None
+
         
         
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">ISV增量消息订阅信息</SPAN>
@@ -70,17 +73,13 @@ class IncrementSubscribemessageGetResponse(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"></SPAN>
-        # </LI>
         # </UL>
         self.subscribe_message = None
-        ''' 
-        @ivar subscribe_message: ISV增量消息订阅信息; B{Level}: C{Object}; B{Required}: C{true}; B{Sample}: C{};
-        @type subscribe_message: SubscribeMessage
-        '''
     
         self.__init(kargs)
+
+    def isSuccess(self):
+        return self.code == None and self.sub_code == None
     
     def _newInstance(self, name, value):
         types = self._getPropertyType(name)
@@ -101,6 +100,10 @@ class IncrementSubscribemessageGetResponse(object):
             if isArray:
                 return [x.encode("utf-8") for x in value[value.keys()[0]]]
             else:
+                #like taobao.simba.rpt.adgroupbase.get, response.rpt_adgroup_base_list is a json string,but will be decode into a list via python json lib 
+                if not isinstance(value,str):
+                    #the value should be a json string 
+                    return value
                 return value.encode("utf-8")
         else:
             if isArray:
@@ -119,23 +122,8 @@ class IncrementSubscribemessageGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -146,6 +134,13 @@ class IncrementSubscribemessageGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("subscribe_message"):
+        if "subscribe_message" in kargs:
             self.subscribe_message = self._newInstance("subscribe_message", kargs["subscribe_message"])
-        pass
+        if "code" in kargs:
+            self.code = kargs["code"]
+        if "msg" in kargs:
+            self.msg = kargs["msg"]
+        if "sub_code" in kargs:
+            self.sub_code = kargs["sub_code"]
+        if "sub_msg" in kargs:
+            self.sub_msg = kargs["sub_msg"]

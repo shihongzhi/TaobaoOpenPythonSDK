@@ -21,29 +21,24 @@ class RequestParser(object):
         self.output = output
         
     def generateFiles(self):
-        rootOutput = os.path.join(self.output, requestOutput)
+        rootOutput = os.path.join(self.output, OUTPUT['request'])
         if not os.path.exists(rootOutput):
             os.makedirs(rootOutput)
         imported = set()
+        templateFile = Template(file(TEMPLATE['request']).read().decode("utf-8"))
         for api in self.root.getElementsByTagName("api"):
             name = api.getElementsByTagName("name")[0].firstChild.data
             name = name.encode("utf-8")
-            name = str().join([x.capitalize() for x in name.lstrip("taobao").split(".") if x != str()])
+            name = ''.join(x.capitalize() for x in name.lstrip("taobao").split(".") if x)
             name += "Request"
             imported.add(name)
             filename = os.path.join(rootOutput, name + ".py")
             print "Generating %s" % (filename)
-            templateFile = Template(file(requestTemplate).read().decode("utf-8"))
             rendered = templateFile.render_unicode(api=api).encode("utf-8")
             rendered = rendered.replace("\\#\\#", "##")
-            fout = file(filename, "w")
-            fout.write(rendered)
-            fout.close()
-        templateFile = Template(file(initTemplate).read().decode("utf-8"))
+            with open(filename, 'w') as fout:
+                fout.write(rendered)
+        templateFile = Template(file(TEMPLATE['init']).read().decode("utf-8"))
         rendered = templateFile.render_unicode(imports=imported).encode("utf-8")
-        fout = file(os.path.join(rootOutput, "__init__.py"), "w")
-        fout.write(rendered)
-        fout.close()
-            
-
-            
+        with open(os.path.join(rootOutput, "__init__.py"), 'w') as fout:
+            fout.write(rendered)

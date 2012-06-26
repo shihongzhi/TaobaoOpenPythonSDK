@@ -3,11 +3,10 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-
 ## @brief 创建店铺优惠券。有效期内的店铺优惠券总数量不超过100张
 # @author wuliang@maimiaotech.com
-# @date 2012-06-09 16:56:05
-# @version: 0.0.16
+# @date 2012-06-26 21:24:21
+# @version: 0.0.0
 
 from datetime import datetime
 import os
@@ -27,17 +26,13 @@ if __parentPath not in sys.path:
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 创建店铺优惠券。有效期内的店铺优惠券总数量不超过100张</SPAN>
 # <UL>
 # <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">CName</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">创建店铺优惠券接口</SPAN>
-# </LI>
-# <LI>
-# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">必须用户授权</SPAN>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
 # </LI>
 # </UL>
 class PromotionCouponAddResponse(object):
     def __init__(self, kargs=dict()):
         super(self.__class__, self).__init__()
-        
-        
+
         ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">请求的返回信息,包含状态等</SPAN>
         # <UL>
         # <LI>
@@ -53,6 +48,14 @@ class PromotionCouponAddResponse(object):
         # </LI>
         # </UL>        
         self.responseBody = None
+
+        self.code = None
+
+        self.msg = None
+
+        self.sub_code = None
+
+        self.sub_msg = None
 
         
         
@@ -72,12 +75,11 @@ class PromotionCouponAddResponse(object):
         # </LI>
         # </UL>
         self.coupon_id = None
-        ''' 
-        @ivar coupon_id: 优惠券的id; B{Level}: C{Basic}; B{Required}: C{true}; B{Sample}: C{123456};
-        @type coupon_id: Number
-        '''
     
         self.__init(kargs)
+
+    def isSuccess(self):
+        return self.code == None and self.sub_code == None
     
     def _newInstance(self, name, value):
         types = self._getPropertyType(name)
@@ -98,6 +100,10 @@ class PromotionCouponAddResponse(object):
             if isArray:
                 return [x.encode("utf-8") for x in value[value.keys()[0]]]
             else:
+                #like taobao.simba.rpt.adgroupbase.get, response.rpt_adgroup_base_list is a json string,but will be decode into a list via python json lib 
+                if not isinstance(value,str):
+                    #the value should be a json string 
+                    return value
                 return value.encode("utf-8")
         else:
             if isArray:
@@ -116,23 +122,8 @@ class PromotionCouponAddResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,6 +134,13 @@ class PromotionCouponAddResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("coupon_id"):
+        if "coupon_id" in kargs:
             self.coupon_id = self._newInstance("coupon_id", kargs["coupon_id"])
-        pass
+        if "code" in kargs:
+            self.code = kargs["code"]
+        if "msg" in kargs:
+            self.msg = kargs["msg"]
+        if "sub_code" in kargs:
+            self.sub_code = kargs["sub_code"]
+        if "sub_msg" in kargs:
+            self.sub_msg = kargs["sub_msg"]

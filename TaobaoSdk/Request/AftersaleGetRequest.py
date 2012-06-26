@@ -5,7 +5,7 @@
 
 ## @brief 查询用户设置的售后服务模板，仅返回标题和id
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:00
+# @date 2012-06-26 21:24:19
 # @version: 0.0.0
 
 import os
@@ -25,6 +25,9 @@ if __modulePath not in sys.path:
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">查询用户设置的售后服务模板，仅返回标题和id</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">必须用户授权</SPAN>
+# </LI>
 # </UL>
 class AftersaleGetRequest(object):
     def __init__(self):

@@ -5,7 +5,7 @@
 
 ## @brief 淘花商品列表
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:20:57
+# @date 2012-06-26 21:24:19
 # @version: 0.0.0
 
 from copy import deepcopy
@@ -23,13 +23,13 @@ if __getCurrentPath() not in sys.path:
 
 
         
+from TaohuaSearchItem import TaohuaSearchItem
+
+        
 from TaohuaCategory import TaohuaCategory
 
         
 from TaohuaCateStat import TaohuaCateStat
-
-        
-from TaohuaSearchItem import TaohuaSearchItem
 
         
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘花商品列表</SPAN>
@@ -40,6 +40,20 @@ class TaohuaSearchItems(object):
         self.__kargs = deepcopy(kargs)
         
         
+        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘花搜索商品对象列表数据结构</SPAN>
+        # <UL>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">TaohuaSearchItem</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
+        # </UL>
+        self.taohua_search_items = None
+        
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘花类目路径数据结构</SPAN>
         # <UL>
         # <LI>
@@ -47,6 +61,9 @@ class TaohuaSearchItems(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.cate_paths = None
@@ -59,19 +76,11 @@ class TaohuaSearchItems(object):
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
         # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
+        # </LI>
         # </UL>
         self.cate_stats = None
-        
-        ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">淘花搜索商品对象列表数据结构</SPAN>
-        # <UL>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">TaohuaSearchItem</SPAN>
-        # </LI>
-        # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
-        # </LI>
-        # </UL>
-        self.taohua_search_items = None
         
         ## @brief <SPAN style="color:Blue3; font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">搜索出来的商品总数</SPAN>
         # <UL>
@@ -80,6 +89,12 @@ class TaohuaSearchItems(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">100</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Private</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.total_item = None
@@ -130,30 +145,19 @@ class TaohuaSearchItems(object):
     def _getPropertyType(self, name):
         properties = {
             
+            "taohua_search_items": "TaohuaSearchItem",
+            
             "cate_paths": "TaohuaCategory",
             
             "cate_stats": "TaohuaCateStat",
             
-            "taohua_search_items": "TaohuaSearchItem",
-            
             "total_item": "Number",
         }
         nameType = properties[name]
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Field List":str, "Price":float, "byte[]":str}
         pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
+        if nameType in nameTypeToPythonType:
+            pythonType = nameTypeToPythonType[nameType]
         else:
             pythonType = getattr(
                 sys.modules[os.path.basename(
@@ -163,14 +167,14 @@ class TaohuaSearchItems(object):
         
     def __init(self, kargs):
         
-        if kargs.has_key("cate_paths"):
-            self.cate_paths = self._newInstance("cate_paths", kargs["cate_paths"])
-        
-        if kargs.has_key("cate_stats"):
-            self.cate_stats = self._newInstance("cate_stats", kargs["cate_stats"])
-        
-        if kargs.has_key("taohua_search_items"):
+        if "taohua_search_items" in kargs:
             self.taohua_search_items = self._newInstance("taohua_search_items", kargs["taohua_search_items"])
         
-        if kargs.has_key("total_item"):
+        if "cate_paths" in kargs:
+            self.cate_paths = self._newInstance("cate_paths", kargs["cate_paths"])
+        
+        if "cate_stats" in kargs:
+            self.cate_stats = self._newInstance("cate_stats", kargs["cate_stats"])
+        
+        if "total_item" in kargs:
             self.total_item = self._newInstance("total_item", kargs["total_item"])

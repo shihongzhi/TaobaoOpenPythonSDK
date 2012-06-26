@@ -5,7 +5,7 @@
 
 ## @brief 用某个组管理员账号查询，返回该组组名、和该组所有组成员ID（E客服的分流设置）。  用旺旺主帐号查询，返回所有组的组名和该组所有组成员ID。  返回的组成员ID可以是多个，用 "," 隔开。  被查者ID只能传入一个。  组成员中排名最靠前的ID是组管理员ID
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:04
+# @date 2012-06-26 21:24:20
 # @version: 0.0.0
 
 import os
@@ -25,6 +25,9 @@ if __modulePath not in sys.path:
 
 ## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">用某个组管理员账号查询，返回该组组名、和该组所有组成员ID（E客服的分流设置）。  用旺旺主帐号查询，返回所有组的组名和该组所有组成员ID。  返回的组成员ID可以是多个，用 "," 隔开。  被查者ID只能传入一个。  组成员中排名最靠前的ID是组管理员ID</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">必须用户授权</SPAN>
+# </LI>
 # </UL>
 class WangwangEserviceGroupmemberGetRequest(object):
     def __init__(self):
@@ -53,7 +56,13 @@ class WangwangEserviceGroupmemberGetRequest(object):
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Type</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">String</SPAN>
         # </LI>
         # <LI>
-        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">required</SPAN>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Basic</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">必须</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Sample</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">cntaobaotest</SPAN>
         # </LI>
         # </UL>
         self.manager_id = None

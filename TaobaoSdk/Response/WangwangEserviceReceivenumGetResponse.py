@@ -3,9 +3,9 @@
 # vim: set ts=4 sts=4 sw=4 et:
 
 
-## @brief 根据操作者ID，返回被查者ID指定时间段内每个帐号的"已接待人数"<br/> 备注：<br/> 1、如果是操作者ID=被查者ID，返回被查者ID的"已接待人数"。<br/> 2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"已接待人数"。<br/> 3、如果操作者是主账户，他可以查询所有子帐号的"已接待人数"。<br/> （注意：这里说的是授权是主帐号，可以查询所有子帐号的数据，具体要查询哪些子账号的数据，需要在service_staff_id具体指定，而不是service_staff_id直接输入主帐号）<br/>  4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。<br/>  5、规则：某客服在1天内和同一个客户交流了多次，已回复人数算1。<br/> 6、"已接待人数"定义：买家、卖家彼此发过至少1条消息 ，不论谁先发都可以。<br/>   7、被查者ID可以是多个，用 "," 隔开，id数不能超过30。<br/>   8、开始时间与结束时间之间的间隔不能超过7天<br/>   9、不能查询90天以前的数据<br/>   10、不能查询当天的记录<br/>    11、查询日期精确到日<br/>
+## @brief 根据操作者ID，返回被查者ID指定时间段内每个帐号的"已接待人数"  备注：1、如果是操作者ID=被查者ID，返回被查者ID的"已接待人数"。      2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"已接待人数"。      3、如果操作者是主账户，他可以查询所有子帐号的"已接待人数"。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。      5、规则：某客服在1天内和同一个客户交流了多次，已回复人数算1。      6、"已接待人数"定义：买家、卖家彼此发过至少1条消息 ，不论谁先发都可以。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。     7、开始时间与结束时间之间的间隔不能超过7天     8、不能查询90天以前的数据     9、不能查询当天的记录
 # @author wuliang@maimiaotech.com
-# @date 2012-06-26 09:21:18
+# @date 2012-06-26 21:24:21
 # @version: 0.0.0
 
 from datetime import datetime
@@ -26,8 +26,11 @@ from Domain.ReplyStatOnDay import ReplyStatOnDay
 
 
 
-## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据操作者ID，返回被查者ID指定时间段内每个帐号的"已接待人数"<br/> 备注：<br/> 1、如果是操作者ID=被查者ID，返回被查者ID的"已接待人数"。<br/> 2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"已接待人数"。<br/> 3、如果操作者是主账户，他可以查询所有子帐号的"已接待人数"。<br/> （注意：这里说的是授权是主帐号，可以查询所有子帐号的数据，具体要查询哪些子账号的数据，需要在service_staff_id具体指定，而不是service_staff_id直接输入主帐号）<br/>  4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。<br/>  5、规则：某客服在1天内和同一个客户交流了多次，已回复人数算1。<br/> 6、"已接待人数"定义：买家、卖家彼此发过至少1条消息 ，不论谁先发都可以。<br/>   7、被查者ID可以是多个，用 "," 隔开，id数不能超过30。<br/>   8、开始时间与结束时间之间的间隔不能超过7天<br/>   9、不能查询90天以前的数据<br/>   10、不能查询当天的记录<br/>    11、查询日期精确到日<br/></SPAN>
+## @brief <SPAN style="font-size:16px; font-family:'宋体','Times New Roman',Georgia,Serif;">Response: 根据操作者ID，返回被查者ID指定时间段内每个帐号的"已接待人数"  备注：1、如果是操作者ID=被查者ID，返回被查者ID的"已接待人数"。      2、如果操作者是组管理员，他可以查询他的组中的所有子帐号的"已接待人数"。      3、如果操作者是主账户，他可以查询所有子帐号的"已接待人数"。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。      5、规则：某客服在1天内和同一个客户交流了多次，已回复人数算1。      6、"已接待人数"定义：买家、卖家彼此发过至少1条消息 ，不论谁先发都可以。     4、被查者ID可以是多个，用 "," 隔开，id数不能超过30。     7、开始时间与结束时间之间的间隔不能超过7天     8、不能查询90天以前的数据     9、不能查询当天的记录</SPAN>
 # <UL>
+# <LI>
+# <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Authorize</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;"><DOM Text node "必须用户授权"></SPAN>
+# </LI>
 # </UL>
 class WangwangEserviceReceivenumGetResponse(object):
     def __init__(self, kargs=dict()):
@@ -66,6 +69,9 @@ class WangwangEserviceReceivenumGetResponse(object):
         # </LI>
         # <LI>
         # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Level</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">Object Array</SPAN>
+        # </LI>
+        # <LI>
+        # <SPAN style="color:DarkRed; font-size:18px; font-family:'Times New Roman',Georgia,Serif;">Required</SPAN>: <SPAN style="color:DarkMagenta; font-size:16px; font-family:'Times New Roman','宋体',Georgia,Serif;">true</SPAN>
         # </LI>
         # </UL>
         self.reply_stat_list_on_days = None
@@ -116,23 +122,8 @@ class WangwangEserviceReceivenumGetResponse(object):
         }
         
         nameType = properties[name]
-        pythonType = None
-        if nameType == "Number":
-            pythonType = int
-        elif nameType == "String":
-            pythonType = str
-        elif nameType == 'Boolean':
-            pythonType = bool
-        elif nameType == "Date":
-            pythonType = datetime
-        elif nameType == 'Field List':
-            pythonType == str
-        elif nameType == 'Price':
-            pythonType = float
-        elif nameType == 'byte[]':
-            pythonType = str
-        else:
-            pythonType = getattr(sys.modules["Domain.%s" % nameType], nameType)
+        nameTypeToPythonType = {"Number":int, "String":str, "Boolean":bool, "Date":datetime, "Price":float, "byte[]":str}
+        pythonType = nameTypeToPythonType.get(nameType, getattr(sys.modules["Domain.%s" % nameType], nameType))
         
         # 是单个元素还是一个对象
         level = levels[name]
@@ -143,13 +134,13 @@ class WangwangEserviceReceivenumGetResponse(object):
 
     def __init(self, kargs):
         
-        if kargs.has_key("reply_stat_list_on_days"):
+        if "reply_stat_list_on_days" in kargs:
             self.reply_stat_list_on_days = self._newInstance("reply_stat_list_on_days", kargs["reply_stat_list_on_days"])
-        if kargs.has_key("code"):
+        if "code" in kargs:
             self.code = kargs["code"]
-        if kargs.has_key("msg"):
+        if "msg" in kargs:
             self.msg = kargs["msg"]
-        if kargs.has_key("sub_code"):
+        if "sub_code" in kargs:
             self.sub_code = kargs["sub_code"]
-        if kargs.has_key("sub_msg"):
+        if "sub_msg" in kargs:
             self.sub_msg = kargs["sub_msg"]
